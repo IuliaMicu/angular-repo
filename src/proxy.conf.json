@@ -1,0 +1,7 @@
+{
+    "/api/*": {
+        "target": "https://ec2-3-137-176-94.us-east-2.compute.amazonaws.com:8081",
+        "secure": false,
+        "logLevel": "debug"
+    }
+}
