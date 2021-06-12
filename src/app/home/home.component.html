@@ -1,6 +1,12 @@
-﻿<div class="p-4">
-    <div class="container">
+﻿<div class="p-4" style="height:100%">
+    <div class="container" style="height:20%">
         <h1>Hi {{account.firstName}}!</h1>
-        <p>You're logged in with Angular 10 & JWT!!</p>
     </div>
+
+
+
+</div>
+<div  style="height:80%">
+    <h1 *ngIf="!account.role">Wait until a role is assigned to you.</h1>
+<p-tabMenu [model]="items" [activeItem]="activeItem"></p-tabMenu>
 </div>

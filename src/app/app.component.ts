@@ -2,8 +2,9 @@
 
 import { AccountService } from './_services';
 import { Account, Role } from './_models';
+import {ConfirmationService, MessageService} from 'primeng/api';
 
-@Component({ selector: 'app', templateUrl: 'app.component.html' })
+@Component({ selector: 'app', templateUrl: 'app.component.html', providers:[ConfirmationService, MessageService] })
 export class AppComponent {
     Role = Role;
     account: Account;
