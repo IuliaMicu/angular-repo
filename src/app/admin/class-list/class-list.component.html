@@ -1,0 +1,73 @@
+<p-confirmDialog header="Confirm" icon="pi pi-exclamation-triangle" acceptLabel="Yes" rejectLabel="No" ></p-confirmDialog>
+<p-dialog header="Add" [(visible)]="display" [modal]="true" [closable]="true">
+    <label for="name">Class name</label>
+    <input id="name" type="text" pInputText [(ngModel)]="className"
+           [style]="{'width':'100%'}"/>
+    <br>
+    <label for="teacher">Class teacher</label>
+    <p-dropdown id = "teacher"  [options]="teachers" [(ngModel)]="this.teacher"  optionLabel="name" optionValue="id"  [style]="{'width':'100%'}" [appendTo]="'body'"></p-dropdown>
+
+    <p-footer>
+        <button type="button" pButton icon="pi pi-check" (click)="modalClick()" label="Ok"></button>
+    </p-footer>
+</p-dialog>
+<h3>
+    <span class="page-header">Classes</span>
+    <button pButton type="button"
+            (click)="addClass()"
+            class=" p-button-info float-right"
+            label="Add class"
+            icon="pi pi-plus">
+    </button>
+</h3>
+<p-table #dt [value]="classes" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+         currentPageReportTemplate="{first} to {last} from {totalRecords}">
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="width:10%">Code
+            </th>
+            <th [pSortableColumn]="'name'" style="width:40%">Name
+                <p-sortIcon [field]=""></p-sortIcon>
+            </th>
+            <th pResizableColumn [pSortableColumn]="'teacherName'" style="width:40%">Teacher
+                <p-sortIcon [field]=""></p-sortIcon>
+            </th>
+            <th pResizableColumn style="width:10%">
+            </th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>
+                <input pInputText type="text" class="width100"
+                       (input)="dt.filter($event.target.value, 'name', 'contains')"/>
+            </th>
+            <th>
+                <input pInputText type="text" class="width100"
+                       (input)="dt.filter($event.target.value, 'teacherName', 'contains')"/>
+            </th>
+            <th>
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-class let-editing="editing" let-ri="rowIndex">
+        <tr>
+            <td>{{ri + 1}}</td>
+            <td>{{class.name}}</td>
+            <td>{{class.teacherName}}</td>
+            <td style="text-align: center">
+                <button type="text" pButton class=" p-button-secondary width90" icon="pi pi-cog" (click)="overlayPanel.toggle($event)"></button>
+                <p-overlayPanel #overlayPanel [appendTo]="'body'">
+                    <ng-template pTemplate>
+                        <button pButton type="button"
+                                class=" p-button-danger button-10-margin"
+                                (click)="clickDelete(overlayPanel, class.id)"
+                                label="Delete"
+                                icon="pi pi-trash">
+                        </button>
+                    </ng-template>
+                </p-overlayPanel>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
