@@ -14,6 +14,7 @@ import {OverlayPanelModule} from 'primeng/overlaypanel';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {DialogModule} from 'primeng/dialog';
 import {DropdownModule} from 'primeng/dropdown';
+import {MultiSelectModule} from 'primeng/multiselect';
 
 @NgModule({
     imports: [
@@ -27,7 +28,8 @@ import {DropdownModule} from 'primeng/dropdown';
         ConfirmDialogModule,
         DialogModule,
         FormsModule,
-        DropdownModule
+        DropdownModule,
+        MultiSelectModule
     ],
     declarations: [
         SubNavComponent,

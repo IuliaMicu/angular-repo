@@ -1,7 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {AccountService} from '@app/_services';
-import {first} from 'rxjs/operators';
-import {Account} from '@app/_models';
 import {Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '@environments/environment';
@@ -20,7 +17,14 @@ export class ClassListComponent implements OnInit {
   baseUrl = `${environment.apiUrl}`;
   className: any;
   display = false;
+  displayU = false;
+  displayA = false;
   teacher: any;
+  id: any;
+  students: any;
+  selectedStudents = [];
+  selectedStudentsTemp;
+  classId: any;
 
   constructor(
       private router: Router,
@@ -44,6 +48,13 @@ export class ClassListComponent implements OnInit {
         t.name = t.account.firstName + " " + t.account.lastName
       });
     })
+
+    this.getAllStudents().subscribe(res => {
+      this.students = res.body;
+      this.students.forEach ( s => {
+        s.name = s.account.firstName + " " + s.account.lastName;
+      })
+    })
   }
 
   deleteClass(id) {
@@ -59,6 +70,14 @@ export class ClassListComponent implements OnInit {
 
   getAllTeachers() {
     return this.http.get<Object>(this.baseUrl + '/getAllTeachers', {observe : 'response'})
+  }
+
+  getAllStudents(){
+    return this.http.get<Object>(this.baseUrl + '/getAllStudents', {observe : 'response'})
+  }
+
+  getClassStudents(){
+    return this.http.get<Object>(this.baseUrl + '/getClassStudents/' + this.classId, {observe : 'response'})
   }
 
 
@@ -83,7 +102,20 @@ export class ClassListComponent implements OnInit {
     return this.http.post<Object>(this.baseUrl + '/createClass', obj,{observe : 'response'})
   }
 
+  editClass(){
+    let obj = {id: this.id, name: this.className, teacherId : this.teacher}
+    return this.http.put<Object>(this.baseUrl + '/updateClass', obj,{observe : 'response'})
+
+  }
+
+  assignStudents(){
+    let obj = {id: this.id, classId: this.classId, students : this.selectedStudents}
+    return this.http.put<Object>(this.baseUrl + '/assignStudents' , obj, {observe: 'response'})
+  }
+
   addClass() {
+    this.teacher = null;
+    this.className = null;
     this.display = true;
   }
 
@@ -99,4 +131,53 @@ export class ClassListComponent implements OnInit {
       this.display = false;
     })
   }
+
+  modalUClick(){
+    this.editClass().subscribe( res =>{
+      this.getAll().subscribe(res => {
+        this.classes = res.body;
+        this.classes.forEach( c => {
+              c.teacherName = c.teacher.account.firstName + " " + c.teacher.account.lastName
+            }
+        )
+      });
+      this.displayU = false;
+    })
+  }
+
+  modalAClick(){
+    this.assignStudents().subscribe( res =>{
+    })
+    this.displayA = false;
+  }
+
+
+  clickEdit(panel , c: any) {
+    panel.hide();
+    this.displayU = true;
+    this.teacher = c.teacherId;
+    this.className = c.name;
+    this.id = c.id;
+
+  }
+  clickAdd(panel, c){
+    panel.hide();
+    this.classId = c.id;
+    this.className = c.name;
+
+    this.getClassStudents().subscribe( res => {
+
+      this.selectedStudents = [];
+      this.displayA = true;
+      this.selectedStudentsTemp = res.body;
+      this.selectedStudentsTemp.forEach( ss => {
+        this.students.forEach( s => {
+          if(ss.id == s.id){
+            this.selectedStudents = [...this.selectedStudents, s]
+          }
+        })
+      })
+    })
+  }
+
 }

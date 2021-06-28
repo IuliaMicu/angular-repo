@@ -5,10 +5,35 @@
            [style]="{'width':'100%'}"/>
     <br>
     <label for="teacher">Class teacher</label>
-    <p-dropdown id = "teacher"  [options]="teachers" [(ngModel)]="this.teacher"  optionLabel="name" optionValue="id"  [style]="{'width':'100%'}" [appendTo]="'body'"></p-dropdown>
+    <p-dropdown id = "teacher"  [options]="teachers" [(ngModel)]="this.teacher"  optionLabel="name" optionValue="id" placeholder="Select teacher" [style]="{'width':'100%'}" [appendTo]="'body'"></p-dropdown>
 
     <p-footer>
         <button type="button" pButton icon="pi pi-check" (click)="modalClick()" label="Ok"></button>
+    </p-footer>
+</p-dialog>
+<p-dialog header="Update" [(visible)]="displayU" [modal]="true" [closable]="true">
+    <label for="nameU">Class name</label>
+    <input id="nameU" type="text" pInputText [(ngModel)]="className"
+           [style]="{'width':'100%'}"/>
+    <br>
+    <label for="teacherU">Class teacher</label>
+    <p-dropdown id = "teacherU"  [options]="teachers" [(ngModel)]="this.teacher"  optionLabel="name" optionValue="id"  placeholder="Select teacher" [style]="{'width':'100%'}" [appendTo]="'body'"></p-dropdown>
+
+    <p-footer>
+        <button type="button" pButton icon="pi pi-check" (click)="modalUClick()" label="Ok"></button>
+    </p-footer>
+</p-dialog>
+
+<p-dialog header="Assign" [(visible)]="displayA" [modal]="true" [closable]="true">
+    <label for="nameA">Class name</label>
+    <input id="nameA" type="text" pInputText [(ngModel)]="className" [disabled]="true"
+           [style]="{'width':'100%'}"/>
+    <br>
+    <label for="studentA">Class students</label>
+    <p-multiSelect  id = "studentA"  [options]="students" [(ngModel)]="this.selectedStudents"  optionLabel="name"  [style]="{'width':'100%'}" [appendTo]="'body'" [maxSelectedLabels]="1" [selectedItemsLabel]="'{0} students selected'"></p-multiSelect>
+
+    <p-footer>
+        <button type="button" pButton icon="pi pi-check" (click)="modalAClick()" label="Ok"></button>
     </p-footer>
 </p-dialog>
 <h3>
@@ -58,6 +83,18 @@
                 <button type="text" pButton class=" p-button-secondary width90" icon="pi pi-cog" (click)="overlayPanel.toggle($event)"></button>
                 <p-overlayPanel #overlayPanel [appendTo]="'body'">
                     <ng-template pTemplate>
+                        <button pButton type="button"
+                                class=" p-button-sucess button-10-margin"
+                                (click)="clickAdd(overlayPanel, class)"
+                                label="Assign students"
+                                icon="pi pi-plus">
+                        </button>
+                        <button pButton type="button"
+                                class=" p-button-info button-10-margin"
+                                (click)="clickEdit(overlayPanel, class)"
+                                label="Edit"
+                                icon="pi pi-pencil">
+                        </button>
                         <button pButton type="button"
                                 class=" p-button-danger button-10-margin"
                                 (click)="clickDelete(overlayPanel, class.id)"
