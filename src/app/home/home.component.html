@@ -1,4 +1,12 @@
-﻿<div class="p-4" style="height:100%">
+﻿<p-dialog header="Mark" [(visible)]="displayMark" [modal]="true" [closable]="true">
+    <p-rating [(ngModel)]="markValue" [stars]="10"></p-rating>
+    <div style="width:100%; text-align: center">{{markValue}}</div>
+    <p-footer>
+        <button type="button" pButton icon="pi pi-check" (click)="modalMarkClick()" label="Mark"></button>
+    </p-footer>
+</p-dialog>
+
+<div class="p-4" style="height:100%">
     <div class="container" style="height:20%">
         <h1>Hi {{account.firstName}}!</h1>
     </div>
@@ -9,4 +17,220 @@
 <div  style="height:80%">
     <h1 *ngIf="!account.role">Wait until a role is assigned to you.</h1>
 <p-tabMenu [model]="items" [activeItem]="activeItem"></p-tabMenu>
+    <div *ngIf="tab == 'Students'">
+        <p-table #dt [value]="students" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+                 currentPageReportTemplate="{first} to {last} from {totalRecords}">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width:10%"></th>
+                    <th [pSortableColumn]="'id'" style="width:20%">Identifier
+                    </th>
+                    <th [pSortableColumn]="'name'" style="width:70%">Name
+                        <p-sortIcon [field]=""></p-sortIcon>
+                    </th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th>
+                        <input pInputText type="text" class="width100"
+                               (input)="dt.filter($event.target.value, 'id', 'contains')"/>
+                    </th>
+                    <th>
+                        <input pInputText type="text" class="width100"
+                               (input)="dt.filter($event.target.value, 'name', 'contains')"/>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-student let-editing="editing" let-ri="rowIndex">
+                <tr>
+                    <td>{{ri + 1}}</td>
+                    <td>{{student.id}}</td>
+                    <td>{{student.name}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <div *ngIf="tab == 'Classes'">
+        <div *ngIf="!showActions">
+            <p-table #dt [value]="classes" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+                     currentPageReportTemplate="{first} to {last} from {totalRecords}">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width:10%"></th>
+                        <th [pSortableColumn]="'id'" style="width:20%">Identifier
+                        </th>
+                        <th [pSortableColumn]="'name'" style="width:30%">Name
+                            <p-sortIcon [field]=""></p-sortIcon>
+                        </th>
+                        <th *ngIf="account.role == 'Admin'" [pSortableColumn]="'teacherName'" style="width:30%">
+                            Teacher
+                        </th>
+                        <th *ngIf="account.role == 'Teacher'" [pSortableColumn]="'teacherName'" style="width:10%">
+                            Activity
+                        </th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th>
+                            <input pInputText type="text" class="width100"
+                                   (input)="dt.filter($event.target.value, 'id', 'contains')"/>
+                        </th>
+                        <th>
+                            <input pInputText type="text" class="width100"
+                                   (input)="dt.filter($event.target.value, 'name', 'contains')"/>
+                        </th>
+                        <th *ngIf="account.role == 'Admin'">
+                            <input pInputText type="text" class="width100"
+                                   (input)="dt.filter($event.target.value, 'teacherName', 'contains')"/>
+                        </th>
+                        <th *ngIf="account.role == 'Teacher'">
+
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-class let-editing="editing" let-ri="rowIndex">
+                    <tr>
+                        <td>{{ri + 1}}</td>
+                        <td>{{class.id}}</td>
+                        <td>{{class.name}}</td>
+                        <td *ngIf="account.role == 'Admin'">{{class.teacherName}}</td>
+                        <td *ngIf="account.role == 'Teacher'">
+                            <button type="text" pButton class=" p-button-secondary width90" icon="pi pi-cog"
+                                    (click)="showClassActivity(class)"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <div *ngIf="showActions">
+
+            <p-table #dt [value]="studentsAct" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+                     currentPageReportTemplate="{first} to {last} from {totalRecords}">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width:10%"></th>
+                        <th [pSortableColumn]="'id'" style="width:20%">Identifier
+                        </th>
+                        <th [pSortableColumn]="'name'" style="width:50%">Name
+                            <p-sortIcon [field]=""></p-sortIcon>
+                        </th>
+                        <th style="width:10%">
+                        </th>
+                        <th style="width:10%">
+                        </th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th>
+                            <input pInputText type="text" class="width100"
+                                   (input)="dt.filter($event.target.value, 'id', 'contains')"/>
+                        </th>
+                        <th>
+                            <input pInputText type="text" class="width100"
+                                   (input)="dt.filter($event.target.value, 'name', 'contains')"/>
+                        </th>
+                        <th>
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-student let-editing="editing" let-ri="rowIndex">
+                    <tr>
+                        <td>{{ri + 1}}</td>
+                        <td>{{student.id}}</td>
+                        <td>{{student.name}}</td>
+                        <td>
+                            <button type="text" pButton class=" p-button-secondary" label="Mark"
+                                    (click)="mark(student)"></button>
+                        </td>
+                        <td>
+                            <button type="text" pButton class=" p-button-secondary" label="Missed"
+                                    (click)="missed(student)"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <button type="text" pButton class=" p-button-secondary" label="Back"
+                    (click)="back()"></button>
+        </div>
+    </div>
+    <div *ngIf="tab == 'Grades'">
+        <p-table #dt [value]="grades" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+                 currentPageReportTemplate="{first} to {last} from {totalRecords}">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width:10%"></th>
+                    <th [pSortableColumn]="'mark'" style="width:30%">Mark
+                    </th>
+                    <th [pSortableColumn]="'created'" style="width:30%">
+                        Date
+                    </th>
+                    <th  [pSortableColumn]="'class.name'" style="width:30%">
+                        Class
+                    </th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th>
+                        <input pInputText type="text" class="width100"
+                               (input)="dt.filter($event.target.value, 'mark', 'contains')"/>
+                    </th>
+                    <th>
+                        <input pInputText type="text" class="width100"
+                               (input)="dt.filter($event.target.value, 'created', 'contains')"/>
+                    </th>
+                    <th >
+                        <input pInputText type="text" class="width100"
+                               (input)="dt.filter($event.target.value, 'class.name', 'contains')"/>
+                    </th>
+
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-grade let-editing="editing" let-ri="rowIndex">
+                <tr>
+                    <td>{{ri + 1}}</td>
+                    <td>{{grade.mark}}</td>
+                    <td>{{grade.created}}</td>
+                    <td>{{grade.class.name}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <div *ngIf="tab == 'Attendances'">
+        <p-table #dt [value]="attendances" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+                 currentPageReportTemplate="{first} to {last} from {totalRecords}">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width:10%"></th>
+                    <th [pSortableColumn]="'created'" style="width:30%">
+                        Date
+                    </th>
+                    <th  [pSortableColumn]="'class.name'" style="width:30%">
+                        Class
+                    </th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th>
+                        <input pInputText type="text" class="width100"
+                               (input)="dt.filter($event.target.value, 'created', 'contains')"/>
+                    </th>
+                    <th >
+                        <input pInputText type="text" class="width100"
+                               (input)="dt.filter($event.target.value, 'class.name', 'contains')"/>
+                    </th>
+
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-grade let-editing="editing" let-ri="rowIndex">
+                <tr>
+                    <td>{{ri + 1}}</td>
+                    <td>{{grade.created}}</td>
+                    <td>{{grade.class.name}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
 </div>
+

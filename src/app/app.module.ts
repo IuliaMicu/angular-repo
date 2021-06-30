@@ -1,6 +1,6 @@
 ﻿import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -12,6 +12,9 @@ import { HomeComponent } from './home';
 import { TabMenuModule} from 'primeng/tabmenu';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {TableModule} from 'primeng/table';
+import {DialogModule} from 'primeng/dialog';
+import {RatingModule} from 'primeng/rating';
 
 @NgModule({
     imports: [
@@ -22,7 +25,11 @@ import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-b
         TabMenuModule,
         ConfirmDialogModule,
         BrowserAnimationsModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
+        TableModule,
+        DialogModule,
+        FormsModule,
+        RatingModule,
     ],
     declarations: [
         AppComponent,
