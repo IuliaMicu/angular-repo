@@ -28,6 +28,9 @@ export class HomeComponent implements OnInit{
     showActions = false;
     displayMark = false;
     currentStudent: any;
+    basicData;
+    basicDataC;
+    basicOptions: any;
 
 
     constructor(private accountService: AccountService, private http: HttpClient, private alertService: AlertService) { }
@@ -77,8 +80,30 @@ export class HomeComponent implements OnInit{
         return this.http.post<Object>(this.baseUrl + '/missStudent', obj,{observe : 'response'})
     }
 
+    average = arr => arr.reduce((acc,v) => acc + v) / arr.length;
+
 
     ngOnInit() {
+
+        this.basicOptions = {
+            legend: {
+                labels: {
+                    fontColor: '#495057'
+                }
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        fontColor: '#495057'
+                    }
+                }],
+                yAxes: [{
+                    ticks: {
+                        fontColor: '#495057'
+                    }
+                }]
+            }
+        };
 
 
 
@@ -93,7 +118,24 @@ export class HomeComponent implements OnInit{
                 this.students = res.body;
                 this.students.forEach ( s => {
                     s.name = s.account.firstName + " " + s.account.lastName;
+                    s.mark = s.grades.length > 0 ? this.average(s.grades.map(g => g.mark)) : 0;
+                    s.missed = s.attendances.length;
                 })
+                this.basicData = {
+                    labels: this.students.map( s => s.name),
+                    datasets: [
+                        {
+                            label: 'Grades',
+                            backgroundColor: '#42A5F5',
+                            data: this.students.map( s => s.mark)
+                        },
+                        {
+                            label: 'Missed',
+                            backgroundColor: '#FFA726',
+                            data: this.students.map( s => s.missed)
+                        }
+                    ]
+                };
             })
 
             this.getAllClasses()
@@ -101,16 +143,35 @@ export class HomeComponent implements OnInit{
                     this.classes = res.body;
                     this.classes.forEach( c => {
                             c.teacherName = c.teacher.account.firstName + " " + c.teacher.account.lastName
+                        c.mark = c.grades.length > 0 ? this.average(c.grades.map(g => g.mark)) : 0;
+                        c.missed = c.attendances.length;
                         }
                     )
+
+                    this.basicDataC = {
+                        labels: this.classes.map( s => s.name),
+                        datasets: [
+                            {
+                                label: 'Grades',
+                                backgroundColor: '#42A5F5',
+                                data: this.classes.map( s => s.mark)
+                            },
+                            {
+                                label: 'Missed',
+                                backgroundColor: '#FFA726',
+                                data: this.classes.map( s => s.missed)
+                            }
+                        ]
+                    };
                 });
+
+
         }
         if(this.account.role === Role.Teacher){
             this.items = [
                 {label: 'Classes', command : () => {this.tab = 'Classes'} },
-                {label: 'Students', command : () => {this.tab = 'Students'} },
-                {label: 'Reports', command : () => {this.tab = 'Reports'} } ,
-            ];
+                {label: 'Students', command : () => {this.tab = 'Students'} }
+                ];
             this.getTeacherId(this.account.id).subscribe((res) => {
                 this.teacherId = res.body['id'];
                 this.getTeacherStudents(this.teacherId).subscribe( students => {
@@ -172,6 +233,8 @@ export class HomeComponent implements OnInit{
     missed(student){
         this.currentStudent = student;
         this.studentMissed().subscribe(res => {
+            this.studentsAct = res.body;
+            this.studentsAct.forEach( s => s.name = s.account.firstName + " " + s.account.lastName)
             this.alertService.success('Student missed!')
         }, (error) => {
             this.alertService.error(error)
@@ -180,6 +243,8 @@ export class HomeComponent implements OnInit{
 
     modalMarkClick() {
         this.markStudent().subscribe(res => {
+            this.studentsAct = res.body;
+            this.studentsAct.forEach( s => s.name = s.account.firstName + " " + s.account.lastName)
             this.alertService.success('Student marked!')
             this.displayMark = false;
         }, (error) => {

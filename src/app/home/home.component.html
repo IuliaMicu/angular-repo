@@ -111,8 +111,12 @@
                         <th style="width:10%"></th>
                         <th [pSortableColumn]="'id'" style="width:20%">Identifier
                         </th>
-                        <th [pSortableColumn]="'name'" style="width:50%">Name
+                        <th [pSortableColumn]="'name'" style="width:20%">Name
                             <p-sortIcon [field]=""></p-sortIcon>
+                        </th>
+                        <th style="width:20%">Mark today
+                        </th>
+                        <th style="width:10%">Present
                         </th>
                         <th style="width:10%">
                         </th>
@@ -133,6 +137,10 @@
                         </th>
                         <th>
                         </th>
+                        <th>
+                        </th>
+                        <th>
+                        </th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-student let-editing="editing" let-ri="rowIndex">
@@ -140,6 +148,19 @@
                         <td>{{ri + 1}}</td>
                         <td>{{student.id}}</td>
                         <td>{{student.name}}</td>
+                        <td>{{student.grades.length > 0 ? student.grades[0].mark : '-'}}</td>
+                        <td>
+                            <div *ngIf="student.attendances.length == 0">
+                                <button pButton pRipple type="button" icon="pi pi-check"
+                                        class="p-button-rounded p-button-outlined"></button>
+
+                            </div>
+                            <div *ngIf="student.attendances.length > 0">
+                                <button pButton pRipple type="button" icon="pi pi-times"
+                                        class="p-button-rounded p-button-outlined"></button>
+
+                            </div>
+                        </td>
                         <td>
                             <button type="text" pButton class=" p-button-secondary" label="Mark"
                                     (click)="mark(student)"></button>
@@ -231,6 +252,17 @@
                 </tr>
             </ng-template>
         </p-table>
+    </div>
+    <div *ngIf="tab == 'Reports'">
+
+        <div class="card">
+            <h5 style="text-align: center;">Per Student</h5>
+            <p-chart [style]="{margin : 'auto', height:'20%', width:'30%'}" type="bar" [data]="basicData" [options]="basicOptions"></p-chart>
+        </div>
+        <div class="card">
+            <h5 style="text-align: center;">Per Class</h5>
+            <p-chart [style]="{margin : 'auto', height:'20%', width:'30%'}" type="bar" [data]="basicDataC" [options]="basicOptions"></p-chart>
+        </div>
     </div>
 </div>
 

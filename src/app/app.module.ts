@@ -15,6 +15,8 @@ import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-b
 import {TableModule} from 'primeng/table';
 import {DialogModule} from 'primeng/dialog';
 import {RatingModule} from 'primeng/rating';
+import {RippleModule} from 'primeng/ripple';
+import {ChartModule} from 'primeng/chart';
 
 @NgModule({
     imports: [
@@ -30,7 +32,8 @@ import {RatingModule} from 'primeng/rating';
         DialogModule,
         FormsModule,
         RatingModule,
-    ],
+        RippleModule,
+        ChartModule],
     declarations: [
         AppComponent,
         AlertComponent,

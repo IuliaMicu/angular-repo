@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://ec2-3-12-151-13.us-east-2.compute.amazonaws.com:8081'
+  apiUrl: 'http://ec2-3-133-131-247.us-east-2.compute.amazonaws.com:8081'
 };
 
 /*
@@ -12,6 +12,6 @@ export const environment = {
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
  *
  * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
+ * on performance if an error is thrown.M
  */
 // import 'zone.js/dist/zone-error';  // Included with Angular CLI.
